@@ -1,0 +1,310 @@
+# ============================================================================
+# Tabi Backend - Git Ignore File
+# Optimized for Rust, Docker, and IoT development
+# ============================================================================
+
+# =============================================================================
+# Rust-specific
+# =============================================================================
+
+# Compiled files
+/target/
+**/*.rs.bk
+*.pdb
+
+**/passwd
+
+# Cargo lock file (uncomment if this is a library)
+# Cargo.lock
+
+# Build artifacts
+/target/
+.cargo/
+**/*.orig
+
+# =============================================================================
+# Environment and Configuration
+# =============================================================================
+
+# Environment variables (keep examples)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+!.env.example
+
+# Local configuration overrides
+config.local.json
+config.json.backup*
+
+# =============================================================================
+# Development and IDE
+# =============================================================================
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# IntelliJ IDEA / CLion
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# =============================================================================
+# Docker
+# =============================================================================
+
+# Docker override files
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Docker volumes data
+data/
+logs/
+
+# Build context excludes are in .dockerignore
+
+# =============================================================================
+# OS-specific
+# =============================================================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Icon?
+
+# Linux
+*~
+.nfs*
+
+# =============================================================================
+# Logs and Runtime
+# =============================================================================
+
+# Application logs
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# =============================================================================
+# Testing
+# =============================================================================
+
+# Test results
+test-results/
+coverage/
+.nyc_output/
+.coverage/
+
+# Mock data
+mock-data/
+test-data/
+
+# =============================================================================
+# Deployment and Build
+# =============================================================================
+
+# Deployment archives
+*.tar.gz
+*.zip
+tabi-deploy.*
+tabi-backend-*.tar.gz
+
+# Build directories
+dist/
+build/
+out/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# =============================================================================
+# Security and Secrets
+# =============================================================================
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+
+# SSH keys
+id_rsa
+id_rsa.pub
+*.ppk
+
+# API keys and secrets
+secrets/
+.secrets/
+
+# =============================================================================
+# Database
+# =============================================================================
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# Database dumps
+*.sql
+*.dump
+
+# =============================================================================
+# Backup files
+# =============================================================================
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+
+# =============================================================================
+# Package managers and dependencies
+# =============================================================================
+
+# Node.js (if using frontend tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if using Python tools)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# =============================================================================
+# Monitoring and Analytics
+# =============================================================================
+
+# Prometheus data
+prometheus/
+
+# Grafana data
+grafana/
+
+# Application metrics
+metrics/
+
+# =============================================================================
+# Documentation build artifacts
+# =============================================================================
+
+# Generated documentation
+docs/_build/
+site/
+
+# =============================================================================
+# Raspberry Pi specific
+# =============================================================================
+
+# Hardware configuration
+gpio.conf
+hardware.local
+
+# System files (if accidentally added)
+/boot/
+/proc/
+/sys/
+/dev/
+
+# =============================================================================
+# Keep these files (exceptions to above rules)
+# =============================================================================
+
+# Essential configuration examples
+!config.example.json
+!.env.example
+
+# Docker configuration
+!docker/
+!Dockerfile*
+!docker-compose*.yml
+
+# Documentation
+!README.md
+!API.md
+!*.md
+
+# Scripts
+!*.sh
+!Makefile
+
+# =============================================================================
+# Project-specific ignores
+# =============================================================================
+
+# Performance benchmarks
+benchmarks/
+performance-results/
+
+# Integration test artifacts
+integration-tests/results/
+e2e-tests/results/
+
+# Local development overrides
+*.local.*
+
+# Editor swap files
+.*.swp
+.*.swo
+
+# Temporary patches
+*.patch
+*.diff
+
+# Local notes
+notes.txt
+TODO.local

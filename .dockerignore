@@ -1,0 +1,52 @@
+# Build artifacts
+target/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Git
+.git/
+.gitignore
+
+# Documentation (not needed in container)
+README.md
+*.md
+
+# Scripts (not needed in container, except start.sh which is created inline)
+build.sh
+run.sh
+
+# Docker files (not needed inside container)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Logs
+*.log
+logs/
+
+# Backup files
+*.backup
+*.bak
+config.backup.json
+
+# Development files
+.env
+.env.local
+.env.development
+
+# Test files
+tests/
+test-*
+
+# Cache directories
+.cache/

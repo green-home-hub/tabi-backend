@@ -1,0 +1,96 @@
+{
+  "mqtt": {
+    "broker_host": "localhost",
+    "broker_port": 1883,
+    "client_id": "tabi-backend",
+    "keep_alive_secs": 5,
+    "username": "username",
+    "password": "Manchas420#"
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8080
+  },
+  "blinds": [
+    {
+      "id": "blind_001",
+      "name": "Persiana Dormitorio Principal",
+      "room": "bedroom",
+      "mqtt_topic": "home/blinds/bedroom/control",
+      "device_type": "motorized_blind",
+      "enabled": true,
+      "battery_topic": "home/blinds/bedroom/battery",
+      "status_topic": "home/blinds/bedroom/status"
+    },
+    {
+      "id": "blind_002",
+      "name": "Persiana Sala - Ventana 1",
+      "room": "living",
+      "mqtt_topic": "home/blinds/living/window1/control",
+      "device_type": "motorized_blind",
+      "enabled": true,
+      "battery_topic": "home/blinds/living/window1/battery",
+      "status_topic": "home/blinds/living/window1/status"
+    },
+    {
+      "id": "blind_003",
+      "name": "Persiana Sala - Ventana 2",
+      "room": "living",
+      "mqtt_topic": "home/blinds/living/window2/control",
+      "device_type": "motorized_blind",
+      "enabled": true,
+      "battery_topic": "home/blinds/living/window2/battery",
+      "status_topic": "home/blinds/living/window2/status"
+    },
+    {
+      "id": "blind_004",
+      "name": "Persiana Cocina",
+      "room": "kitchen",
+      "mqtt_topic": "home/blinds/kitchen/control",
+      "device_type": "motorized_blind",
+      "enabled": true,
+      "battery_topic": "home/blinds/kitchen/battery",
+      "status_topic": "home/blinds/kitchen/status"
+    },
+    {
+      "id": "blind_005",
+      "name": "Persiana Estudio",
+      "room": "study",
+      "mqtt_topic": "home/blinds/study/control",
+      "device_type": "motorized_blind",
+      "enabled": true,
+      "battery_topic": "home/blinds/study/battery",
+      "status_topic": "home/blinds/study/status"
+    },
+    {
+      "id": "blind_006",
+      "name": "Persiana Baño Principal",
+      "room": "bathroom",
+      "mqtt_topic": "home/blinds/bathroom/control",
+      "device_type": "motorized_blind",
+      "enabled": true,
+      "battery_topic": "home/blinds/bathroom/battery",
+      "status_topic": "home/blinds/bathroom/status"
+    },
+    {
+      "id": "blind_007",
+      "name": "Persiana Dormitorio Invitados",
+      "room": "guest_room",
+      "mqtt_topic": "home/blinds/guest_room/control",
+      "device_type": "motorized_blind",
+      "enabled": true,
+      "battery_topic": "home/blinds/guest_room/battery",
+      "status_topic": "home/blinds/guest_room/status"
+    },
+    {
+      "id": "blind_008",
+      "name": "Persiana Balcón",
+      "room": "balcony",
+      "mqtt_topic": "home/blinds/balcony/control",
+      "device_type": "outdoor_blind",
+      "enabled": false,
+      "battery_topic": "home/blinds/balcony/battery",
+      "status_topic": "home/blinds/balcony/status"
+    }
+  ]
+}

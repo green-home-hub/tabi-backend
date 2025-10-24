@@ -1,0 +1,8 @@
+# Simple ACL file for Tabi Backend MQTT user
+# Gives tabi-backend user full access to all topics
+
+user tabi-backend
+topic readwrite #
+
+# Deny all other users (safety measure)
+pattern read $SYS/broker/load/+
