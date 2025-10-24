@@ -1,0 +1,60 @@
+# Git attributes for Tabi Backend project
+# Ensures proper handling of line endings and file types across platforms
+
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# Scripts should always use LF line endings (Unix-style)
+*.sh text eol=lf
+tabi text eol=lf
+
+# Configuration files
+*.json text
+*.toml text
+*.yml text
+*.yaml text
+
+# Documentation
+*.md text
+*.txt text
+
+# Rust source files
+*.rs text
+
+# Docker files
+Dockerfile text
+.dockerignore text
+docker-compose*.yml text
+
+# Git files
+.gitignore text
+.gitattributes text
+
+# Exclude from exports (git archive)
+.gitignore export-ignore
+.gitattributes export-ignore
+scripts/README.md export-ignore
+*.md export-ignore
+Dockerfile export-ignore
+docker-compose*.yml export-ignore
+
+# Mark scripts as executable (for platforms that support it)
+*.sh text eol=lf
+tabi text eol=lf
+
+# Binary files (should not be text-processed)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+
+# Ensure consistent handling of Cargo.lock
+Cargo.lock text
+
+# IDE and editor files
+*.code-workspace text

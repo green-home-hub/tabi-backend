@@ -1,0 +1,338 @@
+#!/bin/bash
+# Tabi Backend - Main CLI Wrapper
+# This script provides a unified interface for all project operations
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Project info
+PROJECT_NAME="Tabi Backend"
+PROJECT_VERSION="1.0.0"
+SCRIPTS_DIR="$(dirname "$0")/scripts"
+
+# Banner
+show_banner() {
+    echo -e "${BLUE}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║                    ${CYAN}🏠 Tabi Backend CLI${BLUE}                     ║${NC}"
+    echo -e "${BLUE}║                ${YELLOW}Smart Blinds Control System${BLUE}               ║${NC}"
+    echo -e "${BLUE}║                      ${GREEN}Version $PROJECT_VERSION${BLUE}                      ║${NC}"
+    echo -e "${BLUE}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+}
+
+# Help function
+show_help() {
+    show_banner
+    echo -e "${CYAN}🚀 Available Commands:${NC}"
+    echo ""
+
+    echo -e "${YELLOW}📦 Build & Development:${NC}"
+    echo -e "  ${GREEN}build${NC}           Build Docker image"
+    echo -e "  ${GREEN}build --clean${NC}   Clean build (remove cache)"
+    echo -e "  ${GREEN}dev${NC}             Start development environment"
+    echo -e "  ${GREEN}clean${NC}           Clean all containers and images"
+    echo ""
+
+    echo -e "${YELLOW}🎮 Container Management:${NC}"
+    echo -e "  ${GREEN}start${NC}           Start the application"
+    echo -e "  ${GREEN}stop${NC}            Stop the application"
+    echo -e "  ${GREEN}restart${NC}         Restart the application"
+    echo -e "  ${GREEN}status${NC}          Show system status"
+    echo ""
+
+    echo -e "${YELLOW}📋 Monitoring & Debugging:${NC}"
+    echo -e "  ${GREEN}logs${NC}            Show application logs"
+    echo -e "  ${GREEN}logs -f${NC}         Follow logs in real-time"
+    echo -e "  ${GREEN}shell${NC}           Open shell in container"
+    echo -e "  ${GREEN}test${NC}            Run connectivity tests"
+    echo ""
+
+    echo -e "${YELLOW}🐳 Docker Compose:${NC}"
+    echo -e "  ${GREEN}up${NC}              Start all services (docker-compose up -d)"
+    echo -e "  ${GREEN}down${NC}            Stop all services (docker-compose down)"
+    echo -e "  ${GREEN}ps${NC}              Show running services"
+    echo ""
+
+    echo -e "${YELLOW}🔐 Security & Setup:${NC}"
+    echo -e "  ${GREEN}setup-mqtt${NC}      Create MQTT user credentials"
+    echo -e "  ${GREEN}init${NC}            Initialize project (first-time setup)"
+    echo ""
+
+    echo -e "${YELLOW}ℹ️  Information:${NC}"
+    echo -e "  ${GREEN}help${NC}            Show this help message"
+    echo -e "  ${GREEN}version${NC}         Show version information"
+    echo -e "  ${GREEN}docs${NC}            Show documentation links"
+    echo ""
+
+    echo -e "${CYAN}💡 Examples:${NC}"
+    echo -e "  ${BLUE}./tabi build && ./tabi start${NC}     # Build and start"
+    echo -e "  ${BLUE}./tabi dev${NC}                       # Quick development start"
+    echo -e "  ${BLUE}./tabi logs -f${NC}                   # Watch logs"
+    echo -e "  ${BLUE}./tabi test${NC}                      # Test system"
+    echo ""
+}
+
+# Version information
+show_version() {
+    show_banner
+    echo -e "${CYAN}📊 System Information:${NC}"
+    echo -e "  Project: $PROJECT_NAME"
+    echo -e "  Version: $PROJECT_VERSION"
+    echo -e "  Scripts Directory: $SCRIPTS_DIR"
+    echo ""
+
+    # Check dependencies
+    echo -e "${CYAN}🔧 Dependencies:${NC}"
+
+    if command -v docker >/dev/null 2>&1; then
+        DOCKER_VERSION=$(docker --version | cut -d' ' -f3 | cut -d',' -f1)
+        echo -e "  ✅ Docker: $DOCKER_VERSION"
+    else
+        echo -e "  ❌ Docker: Not installed"
+    fi
+
+    if command -v docker-compose >/dev/null 2>&1; then
+        COMPOSE_VERSION=$(docker-compose --version | cut -d' ' -f3 | cut -d',' -f1)
+        echo -e "  ✅ Docker Compose: $COMPOSE_VERSION"
+    else
+        echo -e "  ❌ Docker Compose: Not installed"
+    fi
+
+    if command -v curl >/dev/null 2>&1; then
+        echo -e "  ✅ curl: Available"
+    else
+        echo -e "  ⚠️  curl: Not available (optional)"
+    fi
+
+    if command -v mosquitto_pub >/dev/null 2>&1; then
+        echo -e "  ✅ Mosquitto clients: Available"
+    else
+        echo -e "  ⚠️  Mosquitto clients: Not available (optional)"
+    fi
+    echo ""
+}
+
+# Show documentation
+show_docs() {
+    echo -e "${CYAN}📚 Documentation & Resources:${NC}"
+    echo ""
+    echo -e "${YELLOW}📖 Project Documentation:${NC}"
+    echo -e "  Main README:        ./README.md"
+    echo -e "  Scripts README:     ./scripts/README.md"
+    echo -e "  MQTT Setup Guide:   ./SIMPLE_MQTT_SETUP.md"
+    echo ""
+    echo -e "${YELLOW}🌐 API Endpoints (when running):${NC}"
+    echo -e "  Health Check:       http://localhost:8080/hello-world"
+    echo -e "  System Status:      http://localhost:8080/blinds/status"
+    echo -e "  Configuration:      http://localhost:8080/blinds/config"
+    echo -e "  Rooms List:         http://localhost:8080/blinds/rooms"
+    echo ""
+    echo -e "${YELLOW}🔗 Control Endpoints:${NC}"
+    echo -e "  Control by ID:      POST /blinds/id/{id}/{action}"
+    echo -e "  Control by Room:    POST /blinds/room/{room}/{action}"
+    echo -e "  Control All:        POST /blinds/all/{action}"
+    echo -e "  Actions: OPEN, CLOSE, STOP"
+    echo ""
+    echo -e "${YELLOW}🐳 Docker & MQTT:${NC}"
+    echo -e "  HTTP Port:          8080"
+    echo -e "  MQTT Port:          1883"
+    echo -e "  Config File:        ./config.json"
+    echo ""
+}
+
+# Check if scripts exist
+check_scripts() {
+    if [ ! -d "$SCRIPTS_DIR" ]; then
+        echo -e "${RED}❌ Scripts directory not found: $SCRIPTS_DIR${NC}"
+        echo -e "${YELLOW}💡 Make sure you're running this from the project root${NC}"
+        exit 1
+    fi
+}
+
+# Initialize project (first-time setup)
+init_project() {
+    echo -e "${BLUE}🚀 Initializing Tabi Backend project...${NC}"
+    echo ""
+
+    # Check dependencies
+    echo -e "${CYAN}1. Checking dependencies...${NC}"
+    if ! command -v docker >/dev/null 2>&1; then
+        echo -e "${RED}❌ Docker is required but not installed${NC}"
+        echo -e "${YELLOW}💡 Install Docker from: https://docs.docker.com/get-docker/${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}✅ Docker is available${NC}"
+
+    # Check if Docker is running
+    if ! docker info >/dev/null 2>&1; then
+        echo -e "${RED}❌ Docker is not running${NC}"
+        echo -e "${YELLOW}💡 Please start Docker Desktop${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}✅ Docker is running${NC}"
+
+    # Create MQTT credentials
+    echo -e "${CYAN}2. Setting up MQTT credentials...${NC}"
+    if [ -f "$SCRIPTS_DIR/create-mqtt-user.sh" ]; then
+        "$SCRIPTS_DIR/create-mqtt-user.sh"
+    else
+        echo -e "${YELLOW}⚠️  MQTT setup script not found${NC}"
+    fi
+
+    # Build the application
+    echo -e "${CYAN}3. Building application...${NC}"
+    "$SCRIPTS_DIR/build.sh"
+
+    # Start the application
+    echo -e "${CYAN}4. Starting application...${NC}"
+    "$SCRIPTS_DIR/run.sh" start
+
+    echo ""
+    echo -e "${GREEN}✅ Initialization complete!${NC}"
+    echo -e "${CYAN}🎉 Tabi Backend is now running${NC}"
+    echo ""
+    echo -e "${YELLOW}📋 Quick commands:${NC}"
+    echo -e "  ./tabi status    # Check system status"
+    echo -e "  ./tabi test      # Run connectivity tests"
+    echo -e "  ./tabi logs -f   # View logs"
+    echo ""
+}
+
+# Development environment setup
+dev_start() {
+    echo -e "${BLUE}🛠️  Starting development environment...${NC}"
+
+    # Build if needed
+    if ! docker images tabi-backend:latest --format "{{.Repository}}:{{.Tag}}" | grep -q "tabi-backend:latest"; then
+        echo -e "${YELLOW}📦 Building application first...${NC}"
+        "$SCRIPTS_DIR/build.sh"
+    fi
+
+    # Start services
+    echo -e "${CYAN}🚀 Starting services...${NC}"
+    "$SCRIPTS_DIR/run.sh" start
+
+    # Show status
+    sleep 3
+    "$SCRIPTS_DIR/run.sh" status
+
+    echo ""
+    echo -e "${GREEN}✅ Development environment ready!${NC}"
+    echo -e "${CYAN}💡 Useful commands:${NC}"
+    echo -e "  ./tabi logs -f   # Follow logs"
+    echo -e "  ./tabi test      # Test API"
+    echo -e "  ./tabi shell     # Container shell"
+}
+
+# Quick docker-compose wrapper
+compose_wrapper() {
+    case "$1" in
+        "up")
+            echo -e "${BLUE}🐳 Starting all services with Docker Compose...${NC}"
+            "$SCRIPTS_DIR/run.sh" compose up -d
+            ;;
+        "down")
+            echo -e "${BLUE}🐳 Stopping all services...${NC}"
+            "$SCRIPTS_DIR/run.sh" compose down
+            ;;
+        "ps")
+            echo -e "${BLUE}🐳 Showing running services...${NC}"
+            docker-compose ps
+            ;;
+        *)
+            "$SCRIPTS_DIR/run.sh" compose "$@"
+            ;;
+    esac
+}
+
+# Main command dispatcher
+main() {
+    # Always check scripts directory first (except for help/version)
+    case "${1:-help}" in
+        help|--help|-h|version|--version|-v|docs) ;;
+        *) check_scripts ;;
+    esac
+
+    case "${1:-help}" in
+        # Build commands
+        build)
+            shift
+            "$SCRIPTS_DIR/build.sh" "$@"
+            ;;
+
+        # Container management
+        start)
+            "$SCRIPTS_DIR/run.sh" start
+            ;;
+        stop)
+            "$SCRIPTS_DIR/run.sh" stop
+            ;;
+        restart)
+            "$SCRIPTS_DIR/run.sh" restart
+            ;;
+        status)
+            "$SCRIPTS_DIR/run.sh" status
+            ;;
+
+        # Development
+        dev)
+            dev_start
+            ;;
+        init)
+            init_project
+            ;;
+
+        # Monitoring
+        logs)
+            shift
+            "$SCRIPTS_DIR/run.sh" logs "$@"
+            ;;
+        shell)
+            "$SCRIPTS_DIR/run.sh" shell
+            ;;
+        test)
+            "$SCRIPTS_DIR/run.sh" test
+            ;;
+
+        # Docker Compose shortcuts
+        up|down|ps)
+            compose_wrapper "$@"
+            ;;
+
+        # Cleanup
+        clean)
+            "$SCRIPTS_DIR/run.sh" clean
+            ;;
+
+        # Setup
+        setup-mqtt)
+            "$SCRIPTS_DIR/create-mqtt-user.sh"
+            ;;
+
+        # Information
+        version|--version|-v)
+            show_version
+            ;;
+        docs)
+            show_docs
+            ;;
+        help|--help|-h)
+            show_help
+            ;;
+
+        # Fallback - pass through to run.sh
+        *)
+            "$SCRIPTS_DIR/run.sh" "$@"
+            ;;
+    esac
+}
+
+# Run main function with all arguments
+main "$@"
