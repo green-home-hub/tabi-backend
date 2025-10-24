@@ -4,26 +4,55 @@ Sistema simple para controlar persianas electrónicas vía MQTT y API REST con D
 
 ## ⚡ Inicio Súper Rápido
 
-### Primera vez (Setup completo)
+> 🪟 **Usuarios de Windows**: Ver [WINDOWS_USAGE.md](WINDOWS_USAGE.md) para guía completa con múltiples opciones
+
+### 🪟 **Para Windows**
+```batch
+# Primera vez (Setup completo)
+tabi init           # Inicialización automática
+# O usar el atajo rápido:
+dev.bat             # Entorno de desarrollo completo
+```
+
+### 🐧 **Para Linux/macOS/WSL**
 ```bash
-# Inicialización automática - hace todo por ti
-./tabi init
+# Primera vez (Setup completo)
+./tabi init         # Inicialización automática
 ```
 
 ### Uso diario
+```batch
+# Windows
+tabi dev            # Iniciar entorno de desarrollo
+tabi status         # Ver estado del sistema
+tabi logs -f        # Ver logs en tiempo real
+tabi help           # Ver todos los comandos disponibles
+```
+
 ```bash
+# Linux/macOS/WSL
 ./tabi dev          # Iniciar entorno de desarrollo
 ./tabi status       # Ver estado del sistema
 ./tabi logs -f      # Ver logs en tiempo real
 ./tabi help         # Ver todos los comandos disponibles
 ```
 
-## 🎮 CLI Principal - `./tabi`
+## 🎮 CLI Principal
 
 El proyecto incluye un CLI unificado que simplifica todas las operaciones:
 
+> 📖 **Para Windows**: Múltiples opciones disponibles - ver [guía completa de Windows](WINDOWS_USAGE.md)
+
+### 🪟 **Windows**
+```batch
+tabi <comando> [opciones]    # Usando tabi.bat
+.\tabi.ps1 <comando>         # Usando PowerShell
+dev.bat                      # Atajo rápido
+```
+
+### 🐧 **Linux/macOS/WSL**
 ```bash
-./tabi <comando> [opciones]
+./tabi <comando> [opciones]  # Usando script bash
 ```
 
 **Comandos principales:**
@@ -40,8 +69,14 @@ El proyecto incluye un CLI unificado que simplifica todas las operaciones:
 ## 🚀 Inicio Rápido con Docker
 
 ### 1. Build y Run (Una sola línea)
+
+**Windows:**
+```batch
+tabi build && tabi start
+```
+
+**Linux/macOS/WSL:**
 ```bash
-# Build la imagen y ejecutar
 ./tabi build && ./tabi start
 ```
 
@@ -88,6 +123,15 @@ Edita `config.json` con tus dispositivos:
 ## 🔧 Scripts de Gestión
 
 ### Build Script
+
+**Windows:**
+```batch
+tabi build           # Build optimizado
+tabi build --clean   # Build limpio
+tabi build --verbose # Build con detalles
+```
+
+**Linux/macOS/WSL:**
 ```bash
 ./tabi build           # Build optimizado
 ./tabi build --clean   # Build limpio
@@ -95,6 +139,21 @@ Edita `config.json` con tus dispositivos:
 ```
 
 ### Run Script
+
+**Windows:**
+```batch
+tabi start      # Iniciar contenedor
+tabi stop       # Detener contenedor
+tabi restart    # Reiniciar contenedor
+tabi logs       # Ver logs
+tabi logs -f    # Ver logs en tiempo real
+tabi status     # Estado del sistema
+tabi test       # Probar API y MQTT
+tabi shell      # Abrir shell en contenedor
+tabi clean      # Limpiar todo
+```
+
+**Linux/macOS/WSL:**
 ```bash
 ./tabi start      # Iniciar contenedor
 ./tabi stop       # Detener contenedor
@@ -108,6 +167,15 @@ Edita `config.json` con tus dispositivos:
 ```
 
 ### Docker Compose
+
+**Windows:**
+```batch
+tabi up         # Iniciar en background
+tabi down       # Detener todo
+tabi ps         # Ver servicios activos
+```
+
+**Linux/macOS/WSL:**
 ```bash
 ./tabi up         # Iniciar en background
 ./tabi down       # Detener todo
@@ -181,11 +249,29 @@ docker exec tabi-backend mosquitto_pub -t test -m "hello"
 ## 📊 Monitoreo
 
 ### Ver Estado del Sistema
+
+**Windows:**
+```batch
+tabi status
+```
+
+**Linux/macOS/WSL:**
 ```bash
 ./tabi status
 ```
 
 ### Logs en Tiempo Real
+
+**Windows:**
+```batch
+# Logs del contenedor
+tabi logs -f
+
+# Logs con docker-compose
+tabi down && tabi up && tabi logs -f
+```
+
+**Linux/macOS/WSL:**
 ```bash
 # Logs del contenedor
 ./tabi logs -f
@@ -240,6 +326,13 @@ cargo run
 ```
 
 2. Reinicia el contenedor:
+
+**Windows:**
+```batch
+tabi restart
+```
+
+**Linux/macOS/WSL:**
 ```bash
 ./tabi restart
 ```
@@ -247,6 +340,20 @@ cargo run
 ## 🛠️ Troubleshooting
 
 ### Contenedor no inicia
+
+**Windows:**
+```batch
+# Ver logs detallados
+tabi logs
+
+# Verificar configuración (requiere jq)
+type config.json
+
+# Reconstruir imagen
+tabi build --clean
+```
+
+**Linux/macOS/WSL:**
 ```bash
 # Ver logs detallados
 ./tabi logs
@@ -259,6 +366,21 @@ cat config.json | jq .
 ```
 
 ### MQTT no conecta
+
+**Windows:**
+```batch
+# Test MQTT broker
+tabi shell
+mosquitto_pub -t test -m hello
+
+# Test completo del sistema
+tabi test
+
+# Verificar puerto
+netstat -an | findstr 1883
+```
+
+**Linux/macOS/WSL:**
 ```bash
 # Test MQTT broker
 ./tabi shell
@@ -269,6 +391,32 @@ mosquitto_pub -t test -m hello
 
 # Verificar puerto
 netstat -tulpn | grep 1883
+```
+
+## 🏗️ Arquitectura del Sistema
+
+### Componentes Principales
+
+**Servicios:**
+- `BlindService`: Lógica de negocio para control de persianas
+- `MqttService`: Manejo de comunicación MQTT
+
+**Handlers (Controladores):**
+- `health.rs`: Endpoints de salud (`/health`, `/ping`)
+- `blinds.rs`: Control de persianas (`/blinds/id/{id}/{action}`)
+- `info.rs`: Información del sistema (`/status`, `/config`)
+
+**Modelos:**
+- `BlindCommand`: Enum para comandos (OPEN, CLOSE, STOP)
+- `BlindStatus`: Estado de las persianas
+- Response types: Respuestas estructuradas de la API
+
+### Flujo de Datos
+
+```
+HTTP Request → Handler → Service → MQTT → Device
+                   ↓
+               Response ← Error Handling ← Validation
 ```
 
 ### API no responde
