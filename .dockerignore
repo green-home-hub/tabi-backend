@@ -22,8 +22,7 @@ README.md
 *.md
 
 # Scripts (not needed in container, except start.sh which is created inline)
-build.sh
-run.sh
+scripts/
 
 # Docker files (not needed inside container)
 Dockerfile

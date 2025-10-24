@@ -2,12 +2,47 @@
 
 Sistema simple para controlar persianas electrónicas vía MQTT y API REST con Docker integrado.
 
+## ⚡ Inicio Súper Rápido
+
+### Primera vez (Setup completo)
+```bash
+# Inicialización automática - hace todo por ti
+./tabi init
+```
+
+### Uso diario
+```bash
+./tabi dev          # Iniciar entorno de desarrollo
+./tabi status       # Ver estado del sistema
+./tabi logs -f      # Ver logs en tiempo real
+./tabi help         # Ver todos los comandos disponibles
+```
+
+## 🎮 CLI Principal - `./tabi`
+
+El proyecto incluye un CLI unificado que simplifica todas las operaciones:
+
+```bash
+./tabi <comando> [opciones]
+```
+
+**Comandos principales:**
+- `init` - Setup inicial completo
+- `dev` - Iniciar desarrollo rápido
+- `build` - Construir imagen Docker
+- `start/stop/restart` - Control del servicio
+- `logs` - Ver logs (usa `-f` para seguir)
+- `status` - Estado y tests de conectividad
+- `test` - Probar API y MQTT
+- `up/down` - Docker Compose shortcuts
+- `help` - Ayuda completa
+
 ## 🚀 Inicio Rápido con Docker
 
 ### 1. Build y Run (Una sola línea)
 ```bash
 # Build la imagen y ejecutar
-./build.sh && ./run.sh start
+./tabi build && ./tabi start
 ```
 
 ### 2. Con Docker Compose (Recomendado)
@@ -54,29 +89,29 @@ Edita `config.json` con tus dispositivos:
 
 ### Build Script
 ```bash
-./build.sh           # Build optimizado
-./build.sh --clean   # Build limpio
-./build.sh --verbose # Build con detalles
+./tabi build           # Build optimizado
+./tabi build --clean   # Build limpio
+./tabi build --verbose # Build con detalles
 ```
 
 ### Run Script
 ```bash
-./run.sh start      # Iniciar contenedor
-./run.sh stop       # Detener contenedor
-./run.sh restart    # Reiniciar contenedor
-./run.sh logs       # Ver logs
-./run.sh logs -f    # Ver logs en tiempo real
-./run.sh status     # Estado del sistema
-./run.sh test       # Probar API y MQTT
-./run.sh shell      # Abrir shell en contenedor
-./run.sh clean      # Limpiar todo
+./tabi start      # Iniciar contenedor
+./tabi stop       # Detener contenedor
+./tabi restart    # Reiniciar contenedor
+./tabi logs       # Ver logs
+./tabi logs -f    # Ver logs en tiempo real
+./tabi status     # Estado del sistema
+./tabi test       # Probar API y MQTT
+./tabi shell      # Abrir shell en contenedor
+./tabi clean      # Limpiar todo
 ```
 
 ### Docker Compose
 ```bash
-./run.sh compose up -d      # Iniciar en background
-./run.sh compose logs -f    # Ver logs
-./run.sh compose down       # Detener todo
+./tabi up         # Iniciar en background
+./tabi down       # Detener todo
+./tabi ps         # Ver servicios activos
 ```
 
 ## 📡 API Endpoints
@@ -147,16 +182,16 @@ docker exec tabi-backend mosquitto_pub -t test -m "hello"
 
 ### Ver Estado del Sistema
 ```bash
-./run.sh status
+./tabi status
 ```
 
 ### Logs en Tiempo Real
 ```bash
 # Logs del contenedor
-./run.sh logs -f
+./tabi logs -f
 
 # Logs con docker-compose
-docker-compose logs -f
+./tabi down && ./tabi up && ./tabi logs -f
 ```
 
 ### Health Check
@@ -206,7 +241,7 @@ cargo run
 
 2. Reinicia el contenedor:
 ```bash
-./run.sh restart
+./tabi restart
 ```
 
 ## 🛠️ Troubleshooting
@@ -214,20 +249,23 @@ cargo run
 ### Contenedor no inicia
 ```bash
 # Ver logs detallados
-./run.sh logs
+./tabi logs
 
 # Verificar configuración
 cat config.json | jq .
 
 # Reconstruir imagen
-./build.sh --clean
+./tabi build --clean
 ```
 
 ### MQTT no conecta
 ```bash
 # Test MQTT broker
-./run.sh shell
+./tabi shell
 mosquitto_pub -t test -m hello
+
+# Test completo del sistema
+./tabi test
 
 # Verificar puerto
 netstat -tulpn | grep 1883

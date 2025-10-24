@@ -69,7 +69,7 @@ RUN mosquitto_passwd -c -b /etc/mosquitto/auth/passwd tabi-backend "TabiMQTT2024
 
 # Copiar configuración de la app y ACL de MQTT
 COPY config.json /app/
-COPY mosquitto_acl /etc/mosquitto/auth/acl
+COPY mosquitto/mosquitto_acl /etc/mosquitto/auth/acl
 
 # Cambiar ownership
 RUN chown -R tabi:tabi /app
